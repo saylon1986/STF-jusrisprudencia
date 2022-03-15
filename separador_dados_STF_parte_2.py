@@ -20,7 +20,7 @@ def Separador_dados(nome_dir):
 			num = str(input("digite o numero da pagina: "))
 			path = nome_dir+num
 			path_files = os.listdir(path)
-			print("temos",len(path_files))
+			# print("temos",len(path_files))
 			for x in range(len(path_files)):
 				numer_acao = []
 				tipo_de_acao = []
@@ -32,7 +32,8 @@ def Separador_dados(nome_dir):
 				funcao = []
 				path_arq = os.path.join(path,path_files[x])
 				
-			#	print(path_arq)
+				# print(path_arq)
+				# print("---------------------------")
 				arq_list_1 = os.listdir(path_arq)
 
 		#		print(arq_list_1)
@@ -62,6 +63,9 @@ def Separador_dados(nome_dir):
 				tipo_de_acao.append(tipo_acao)
 				del(line_0[0]) #deleta esse 
 
+				# print(path_arq)
+				# print(tipo_acao)
+				# print("---------------------------")
 
 				# relator
 				for n in range(len(line_0)):
@@ -165,13 +169,13 @@ def Separador_dados(nome_dir):
 					df_stf["Função_processual_"+str(m+1)] = funcao[m]
 					df_stf["Parte_"+str(m+1)] = partes_separ[m]
 
-				print(df_stf_final)	
+				# print(df_stf_final)	
 				df_stf_final = df_stf_final.append(df_stf,ignore_index=True, sort=False)	
 
 		else:
 			break		
 
-	print(df_stf_final)			
+	# print(df_stf_final)			
 	return df_stf_final
 
 
@@ -179,7 +183,7 @@ def Separador_dados(nome_dir):
 
 
 
-nome_dir = r'PATH onde estao os dados+\pagina_'
+nome_dir = r'C:\Users\saylo\Desktop\STF-jusrisprudencia-main\txt_separados\pagina_'
 
 df_stf_final = pd.DataFrame()
 
