@@ -182,9 +182,17 @@ def Separador_dados(nome_dir):
 	################################################## fim da funcao ##################################################################
 
 
+try:
+	os.mkdir("./txt_separados")
+except:
+    pass
 
-nome_dir = r'C:\Users\saylo\Desktop\STF-jusrisprudencia-main\txt_separados\pagina_'
+try:
+	os.mkdir("./txt_separados/pagina_")
+except:
+    pass
 
+nome_dir = "./txt_separados/pagina_"
 df_stf_final = pd.DataFrame()
 
 
