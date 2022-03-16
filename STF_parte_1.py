@@ -14,16 +14,20 @@ import clipboard
 import shutil
 from tika import parser
 from gera_txt_STF import Txt_Separados
-
-
+from pathlib import Path
 
 ######  Configurações do Firefox ########
 
+# path_default_profile = r'C:\Users\saylo\AppData\Local\Mozilla\Firefox\Profiles\hkuuvzmr.default-release' #caminho do firefox do computador)
 
-diret = r'C:\Users\saylo\Desktop\STF-jusrisprudencia-main\prov' # uma pasta provisoria onde o arquivo e baixado
-path_default_profile =r'C:\Users\saylo\AppData\Local\Mozilla\Firefox\Profiles\mtssggy2.default-release-1' #caminho do firefox do computador
+try:
+	os.mkdir("./prov")
+except:
+    pass
 
+diret = "./prov"
 
+path_default_profile = Path(str(Path(__file__).parent.resolve()) +'\hkuuvzmr.default-release')
 
 
 firefox_profile = webdriver.FirefoxProfile(path_default_profile) #caminho para a configuração desejada encontrar o firefox com o Webdriver
@@ -94,21 +98,21 @@ while True:
 
 			# # começa a separar os dados
 			acao = driver.find_element_by_xpath("//*[@id='scrollId']/div/div[2]/div/div[1]/div[1]/h4[1]") # número
-			# cabec = driver.find_element_by_xpath("//*[@id='scrollId']/div/div[2]/div/div[1]/div[1]") #cabeçalho
-			# partes = driver.find_element_by_xpath("//*[@id='scrollId']/div/div[2]/div/div[3]") 	#partes
+			cabec = driver.find_element_by_xpath("//*[@id='scrollId']/div/div[2]/div/div[1]/div[1]") #cabeçalho
+			partes = driver.find_element_by_xpath("//*[@id='scrollId']/div/div[2]/div/div[3]") 	#partes
 
 
-			# # faz a tentativa e trata os erros pra coletar a decisão e a legislação	
-			# try:
-			# 	decisao = driver.find_element_by_xpath("//*[@id='scrollId']/div/div[2]/div/div[4]")
-			# 	text_decisao = str(decisao.text.encode("utf-8").decode("utf-8"))
-			# except:
-			# 	text_decisao = "vazio"
-			# try:
-			# 	legis = driver.find_element_by_xpath("//*[@id='scrollId']/div/div[2]/div/div[6]")
-			# 	text_legis = str(legis.text.encode("utf-8").decode("utf-8"))
-			# except:
-			# 	text_legis = "vazio"		
+			# faz a tentativa e trata os erros pra coletar a decisão e a legislação	
+			try:
+				decisao = driver.find_element_by_xpath("//*[@id='scrollId']/div/div[2]/div/div[4]")
+				text_decisao = str(decisao.text.encode("utf-8").decode("utf-8"))
+			except:
+				text_decisao = "vazio"
+			try:
+				legis = driver.find_element_by_xpath("//*[@id='scrollId']/div/div[2]/div/div[6]")
+				text_legis = str(legis.text.encode("utf-8").decode("utf-8"))
+			except:
+				text_legis = "vazio"		
 		
 
 			#decodifica os textos da ação, cabeçalho e das partes
@@ -117,23 +121,23 @@ while True:
 			partic = text_acao.split("\n")
 			nome_acao,nada = partic[0].split("/")
 			nome_acao = nome_acao.strip()
-			# text_cabec = str(cabec.text.encode("utf-8").decode("utf-8"))
-			# text_partes = str(partes.text.encode("utf-8").decode("utf-8"))
+			text_cabec = str(cabec.text.encode("utf-8").decode("utf-8"))
+			text_partes = str(partes.text.encode("utf-8").decode("utf-8"))
 
 
 			# # envia para o módulo que faz a separação e gera o TXT
 
-			# Txt_Separados(k,text_cabec,text_partes,text_decisao,text_legis)
+			Txt_Separados(k,text_cabec,text_partes,text_decisao,text_legis)
 
 
-			# try:
-			# 	time.sleep(3)
-			# 	driver.find_element_by_xpath("//*[@id='scrollId']/div/div[1]/mat-icon").click() # clica para voltar pra pagina anterior
-			# 	WebDriverWait(driver, 60).until(EC.presence_of_element_located((By.XPATH, "//*[@id='result-index-{}']/a/h4".format(k))))
-			# 	driver.find_element_by_xpath("//*[@id='result-index-{}']/a/h4".format(k))
-			# except:
-			# 	x = input("houve um problema, faça manualmente") # se travar por algum problema no site, permite o retorno manualmente
-			# print(" Dados do link %s produzidos com sucesso"%(k+1)) # avisa se deu tudo certo com os dados desse link
+			try:
+				time.sleep(3)
+				driver.find_element_by_xpath("//*[@id='scrollId']/div/div[1]/mat-icon").click() # clica para voltar pra pagina anterior
+				WebDriverWait(driver, 60).until(EC.presence_of_element_located((By.XPATH, "//*[@id='result-index-{}']/a/h4".format(k))))
+				driver.find_element_by_xpath("//*[@id='result-index-{}']/a/h4".format(k))
+			except:
+				x = input("houve um problema, faça manualmente") # se travar por algum problema no site, permite o retorno manualmente
+			print(" Dados do link %s produzidos com sucesso"%(k+1)) # avisa se deu tudo certo com os dados desse link
 
 			
 			###########  Parte de baixar o documento ##################
@@ -159,7 +163,11 @@ while True:
 				for q in range(len(pastas)):
 					nome = os.path.join(diret, pastas[q])
 					os.rename(nome, nome_final)
-					dir_final = r'C:\Users\saylo\Desktop\STF-jusrisprudencia-main\acordaos'
+					try:
+						os.mkdir("./acordaos")
+					except:
+						pass
+					dir_final = './acordaos'
 					shutil.move(nome_final,dir_final)
 				print("arquivo do link",k+1,"gerado e movido com sucesso") # informa que terminou
 			except:
